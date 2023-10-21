@@ -1,7 +1,7 @@
 import GameBracket from "@/components/GameBracket";
 import { BASE_URL } from "@/service/api";
 import { Game } from "@/types/Game";
-import { formatDateDDStrMonthYYYY } from "@/utils/dateUtils";
+import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
 
 export default async function Home() {
   const res = await fetch(`${BASE_URL}/draw`, {
@@ -36,7 +36,7 @@ export default async function Home() {
                 >
                   <h2 className="text-center text-yellow-300 font-bold absolute mb-32">
                     {game.date &&
-                      formatDateDDStrMonthYYYY(new Date(game.date).getTime())}
+                      formatDateDayMonthHourMin(new Date(game.date).getTime())}
                   </h2>
                   <GameBracket game={game} key={game.id} />
                 </div>
