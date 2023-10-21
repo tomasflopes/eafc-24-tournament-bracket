@@ -26,7 +26,6 @@ model Match {
 model Player {
   id   String @id @default(cuid()) @map("_id") @db.ObjectId
   name String
-  seed Int
 
   player1 Match[] @relation("player1")
   player2 Match[] @relation("player2")
