@@ -3,5 +3,5 @@ export const formatDateDDStrMonthYYYY = (date: number): string => {
   const hour = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const month = dateObj.toLocaleString('default', { month: 'short' });
-  return `${dateObj.getDate()} ${month} ${dateObj.getFullYear()} ${hour ? hour : '00'}:${minutes ? minutes : '00'}`;
+  return `${dateObj.getDate()} ${month} ${hour ? hour : '00'}:${minutes ? minutes : '00'}`;
 };
