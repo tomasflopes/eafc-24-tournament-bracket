@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Match {
+  id         String  @id @default(cuid()) @map("_id") @db.ObjectId
+  round      Int
+  isFinished Boolean @default(false)
+  player1    Player  @relation("player1", fields: [player1Id], references: [id])
+  player2    Player  @relation("player2", fields: [player2Id], references: [id])
+  winner     Player? @relation("winner", fields: [winnerId], references: [id])
+
+  player1Id String @db.ObjectId
+  player2Id String @db.ObjectId
+  winnerId  String @db.ObjectId
+}
+
+model Player {
+  id   String @id @default(cuid()) @map("_id") @db.ObjectId
+  name String
+  seed Int
+
+  player1 Match[] @relation("player1")
+  player2 Match[] @relation("player2")
+  winner  Match[] @relation("winner")
+}
