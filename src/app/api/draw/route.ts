@@ -22,6 +22,7 @@ export async function GET(request: Request) {
         name: "Winner1",
       },
       result: [0, 0],
+      date: "2021-01-01 15:00",
     },
     {
       players: [
@@ -38,6 +39,8 @@ export async function GET(request: Request) {
         id: 2,
         name: "Winner2",
       },
+      result: [0, 0],
+      date: "2021-01-02 15:30",
     },
     {
       players: [

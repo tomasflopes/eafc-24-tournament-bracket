@@ -1,6 +1,7 @@
 import GameBracket from "@/components/GameBracket";
 import { BASE_URL } from "@/service/api";
 import { Game } from "@/types/Game";
+import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
 
 export default async function Home() {
   const res = await fetch(`${BASE_URL}/draw`, {
@@ -19,28 +20,34 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen relative">
-      <h1 className="text-3xl font-black absolute top-6 left-1/2 -translate-x-1/2">
+    <main className="min-h-screen">
+      <h1 className="text-3xl font-black absolute top-4 left-1/2 -translate-x-1/2">
         NEI-ISEP: EA FC 24 Drawer
       </h1>
 
-      <div className="flex gap-x-8 px-8 h-full min-w-screen text-lg">
+      <div className="flex gap-x-8 px-8 h-full min-w-screen text-lg mt-14">
         {gameList.map((gameRound, i) => (
           <>
-            <section
-              key={i}
-              className="w-full flex flex-col justify-around"
-            >
+            <section key={i} className="w-full flex flex-col justify-around">
               {gameRound.map((game) => (
-                <GameBracket game={game} key={game.id} />
+                <div
+                  className="w-full flex flex-col justify-center"
+                  key={game.id}
+                >
+                  <h2 className="text-center text-yellow-300 font-bold absolute mb-32">
+                    {game.date &&
+                      formatDateDayMonthHourMin(new Date(game.date).getTime())}
+                  </h2>
+                  <GameBracket game={game} key={game.id} />
+                </div>
               ))}
             </section>
             <div className="flex flex-col justify-around w-40 mx-4">
               {gameList[i + 1]?.map((game, j) => (
                 <div
                   key={game.id}
-                  className={`w-40 
-                    h-[${100 / gameList[i].length}%] 
+                  style={{ height: `${100 / gameList[i].length}%` }}
+                  className={`w-40
                     border-t border-b relative border-r border-slate-200 after:border-b 
                     after:absolute after:-right-6 after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-[0.05px] after:bg-slate-200 
                    after:border-slate-200 after:content-['']`}

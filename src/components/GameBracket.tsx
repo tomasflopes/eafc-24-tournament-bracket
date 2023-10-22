@@ -21,9 +21,7 @@ const GameBracket: React.FC<GameBracketProps> = ({ key, game }) => {
       <h2 className="border-r-2 text-right pr-2 border-slate-200">
         {game.result && game.result[1]}
       </h2>
-      <p className="pl-2 pr-6">
-        {game.players && game.players[1].name}
-      </p>
+      <p className="pl-2 pr-6">{game.players && game.players[1].name}</p>
     </article>
   );
 };
