@@ -1,6 +1,6 @@
 import GameBracket from "@/components/GameBracket";
 import { BASE_URL } from "@/service/api";
-import { Game } from "@/types/Game";
+import { Game } from "@/types/Match";
 import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
 
 export default async function Home() {

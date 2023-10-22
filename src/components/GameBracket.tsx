@@ -1,4 +1,4 @@
-import { Game } from "@/types/Game";
+import { Game } from "@/types/Match";
 import { Key } from "react";
 
 interface GameBracketProps {
