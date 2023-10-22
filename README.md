@@ -44,4 +44,4 @@ This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) fi
 
 ### To contribute
 
-In order to contribute to the project, you should look into the document provided in the team's Notion/Trello. All the information related to branches naming and code styling is in there.
+In order to contribute to the project, you should look into board provided in the team's ClickUp. All the information related to branches naming and code styling is in there.
