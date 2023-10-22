@@ -11,12 +11,14 @@ datasource db {
 }
 
 model Match {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  round      Int
-  isFinished Boolean @default(false)
-  player1    Player  @relation("player1", fields: [player1Id], references: [id])
-  player2    Player  @relation("player2", fields: [player2Id], references: [id])
-  winner     Player? @relation("winner", fields: [winnerId], references: [id])
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  round        Int
+  isFinished   Boolean @default(false)
+  player1      Player  @relation("player1", fields: [player1Id], references: [id])
+  player2      Player  @relation("player2", fields: [player2Id], references: [id])
+  winner       Player? @relation("winner", fields: [winnerId], references: [id])
+  player1Score Int
+  playerScore  Int
 
   player1Id String @db.ObjectId
   player2Id String @db.ObjectId
