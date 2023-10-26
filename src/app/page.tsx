@@ -1,6 +1,6 @@
 import GameBracket from "@/components/GameBracket";
 import { BASE_URL } from "@/service/api";
-import { Game } from "@/types/Match";
+import { Match } from "@/types/Match";
 import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
 
 export default async function Home() {
@@ -8,9 +8,9 @@ export default async function Home() {
     cache: "no-cache",
   });
 
-  const draw = (await res.json()) as Game[];
+  const draw = (await res.json()) as Match[];
 
-  const gameList: Game[][] = [];
+  const gameList: Match[][] = [];
   let lastIndex = 0;
 
   for (let i = Math.log2(draw.length + 1) - 1; i >= 0; i--) {
@@ -35,8 +35,8 @@ export default async function Home() {
                   key={game.id}
                 >
                   <h2 className="text-center text-yellow-300 font-bold absolute mb-32">
-                    {game.date &&
-                      formatDateDayMonthHourMin(new Date(game.date).getTime())}
+                    {game.startDate &&
+                      formatDateDayMonthHourMin(new Date(game.startDate).getTime())}
                   </h2>
                   <GameBracket game={game} key={game.id} />
                 </div>
