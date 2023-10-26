@@ -2,10 +2,10 @@ import prisma from "@/app/lib/prisma";
 import { Match, Player } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+// export async function GET(req: NextRequest) {
 
-  return null;
-}
+//  return NextResponse.json(null, { status: 200 });
+// }
 
 export async function POST(req: NextRequest) {
   // draw the tournament bracket
