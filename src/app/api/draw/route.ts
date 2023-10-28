@@ -84,7 +84,6 @@ export async function POST(req: NextRequest) {
                         round: round,
                         player1Id: players[nPlayer - 1]?.id, // *info
                         player2Id: players[nPlayer - 2]?.id, // *info
-                        winnerId: null,
                         startDate: new Date(date), // create new date object to avoid reference
                     });
 
