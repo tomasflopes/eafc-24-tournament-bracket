@@ -1,109 +1,129 @@
 import prisma from "@/app/lib/prisma";
 import { Match, Player } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { object, array, string, number, optional } from 'zod';
 
 export async function GET(req: NextRequest) {
 
- return NextResponse.json([], { status: 200 });
+    return NextResponse.json([], { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
-  // draw the tournament bracket
-  try {
+    // draw the tournament bracket
+    try {
 
-    const { days } = await req.json();
+        // schema for the request body
+        const roundSchema = object({
+            start: string(),
+            end: string(),
+            nPcs: number(),
+            gameTime: number(),
+            breakTime: number(),
+            playersLeft: optional(number()),
+        });
 
-    const matches = [];
+        const requestBodySchema = object({
+            rounds: array(roundSchema),
+        });
 
-    // get players
-    const players: Player[] = await prisma.player.findMany();
-    // randomize players
-    players.sort(() => Math.random() - 0.5);
+        // Validate the request body against the schema
+        const requestBody = await req.json();
+        requestBodySchema.parse(requestBody);
 
-    /* create matches - the following logic was implemented based on this:
-    - number of players is a power of 2
-    - tournament will be during 2 days starting both days at 14h and ending at 18h
-    - quarter, semi and final matches will be played on the second day
-    - on the first day, there will be 2 games happening at the same time
-    - on the second day, there will be only 1 runs at a time
+        // valid body
+        const { rounds } = requestBody;
+
+        const matches = [];
+
+        // get players
+        const players: Player[] = await prisma.player.findMany();
+        // randomize players
+        players.sort(() => Math.random() - 0.5);
+
+        // checks if the number of rounds is log2(nPayers) so the draw can be done
+        if (Math.log2(players.length) != rounds.length) {
+            return NextResponse.json({ error: "The number of rounds must be log2(nPayers)" }, { status: 400 });
+        }
+
+        /* create matches - the following logic was implemented based on this example:
+        
+        32 players
     
-    example:
-    32 players
+        FIRST DAY - always 2 games at the same time
+        32/2 = 16 -> 16 games - round 1
+        16/2 = 8 -> 8 games - round 2
+    
+        SECOND DAY - only one game is played at a time
+        8/2 = 4 -> 4 games - round 3 (quarter-finals)
+        4/2 = 2 -> 2 games - round 4 (semi-finals)
+        2/2 = 1 - 1 game - round 5 (final) */
 
-    FIRST DAY - always 2 games at the same time
-    32/2 = 16 -> 16 games - round 1
-    16/2 = 8 -> 8 games - round 2
+        // num of players
+        let totPlayers = players.length; // total number of players - this will be used to calc the number of rounds
+        let nPlayer = players.length; // number of players - this will be used iterate through the players array till its end
+        // helpers to calc rounds
+        let round = 1;
+        let half = totPlayers / 2;
 
-    SECOND DAY - only one game is played at a time
-    8/2 = 4 -> 4 games - round 3 (quarter-finals)
-    4/2 = 2 -> 2 games - round 4 (semi-finals)
-    2/2 = 1 - 1 game - round 5 (final) */
+        // round r - x games till there are y players left -> y = 'rounds[d].playersLeft' (optional field, if none, then 1)
+        for (let r = 0; r < rounds.length; r++) {
 
-    // num of players
-    let totPlayers = players.length; // total number of players - this will be used to calc the number of rounds
-    let nPlayer = players.length; // number of players - this will be used iterate through the players array till its end
-    // helpers to calc rounds
-    let round = 1;
-    let half = totPlayers / 2;
+            // start date of each round
+            let date = parseDate(rounds[r].start);
 
-    // DAY d - x games till there are y players left -> y = 'days[d].playersLeft' (optional field, if none, then 1)
-    for (let d = 0; d < days.length; d++) {
+            // shcedule matches till rounds[d].playersLeft, if not given the playersLeft, then schedule till there's only 1 player left
+            const pLeft = (rounds[r].playersLeft || 1);
+            while (half >= pLeft) {
 
-      // start date of each day
-      let date = parseDate(days[d].start);
+                // there's a match per PC
+                for (let j = 0; j < rounds[r].nPcs; j++) {
 
-      // shcedule matches till days[d].playersLeft, if not given the playersLeft, then schedule till there's only 1 player left
-      while (half >= (days[d].playersLeft ? days[d].playersLeft : 1)) {
+                    // *info: since this code will shcedule the matches for the rounds in advance, there will be a point 
+                    // where there will be no more players, cuz they still have to play the previous round           
+                    matches.push({
+                        round: round,
+                        player1Id: players[nPlayer - 1]?.id, // *info
+                        player2Id: players[nPlayer - 2]?.id, // *info
+                        winnerId: null,
+                        startDate: new Date(date), // create new date object to avoid reference
+                    });
 
-        // there's a match per PC
-        for (let j = 0; j < days[d].nPcs; j++) {
-          
-          // *info: since this code will shcedule the matches for the rounds in advance, there will be a point 
-          // where there will be no more players, cuz they still have to play the previous round           
-          matches.push({
-            round: round,
-            player1Id: (nPlayer - 1) <= 0 ? null : players[nPlayer - 1].id, // *info
-            player2Id: (nPlayer - 2) <= 0 ? null : players[nPlayer - 2].id, // *info
-            winnerId: null,
-            startDate: new Date(date), // create new date object to avoid reference
-          });
+                    nPlayer = nPlayer - 2; // 2 players per match
+                    totPlayers -= 2; // 2 players per match
+                }
 
-          nPlayer = nPlayer - 2 <= 0 ? 0 : nPlayer - 2; // 2 players per match, only subtract if there are players left
-          totPlayers -= 2; // 2 players per match
+                date.setMinutes(date.getMinutes() + rounds[r].gameTime + rounds[r].breakTime); // recalc date = minutes per match + minutes break
+
+                // recalc round - a round is finished when all the players played
+                if (totPlayers == 0) {
+                    round++; // next round
+                    totPlayers = half; // reset totPlayers
+                    half = half / 2; // recalc half
+                }
+            }
         }
 
-        date.setMinutes(date.getMinutes() + days[d].gameTime + days[d].timeBreak); // recalc date = minutes per match + minutes break
+        const createdMatches = await prisma.match.createMany({
+            data: matches,
+        });
 
-        // recalc round - a round is finished when all the players played
-        if (totPlayers == 0) {
-          round++; // next round
-          totPlayers = half; // reset totPlayers
-          half = half / 2; // recalc half
-        }
-      }
+        return NextResponse.json(createdMatches, { status: 200 });
+
+    } catch (e) {
+        console.log(e);
+
+        return NextResponse.json({ error: "There was an error" }, { status: 500 });
     }
-
-    const createdMatches = await prisma.match.createMany({
-      data: matches,
-    });
-
-    return NextResponse.json(createdMatches, { status: 200 });
-
-  } catch (e) {
-    console.log(e);
-
-    return NextResponse.json({ error: "There was an error" }, { status: 500 });
-  }
 }
 
 // date parser - must receive in the format'dd/mm/yyyy hh:mm' 
 function parseDate(date: string): Date {
-  const [datePart, timePart] = date.split(' ');
-  const [day, month, year] = datePart.split('/').map(Number);
-  const [hours, minutes] = timePart.split(':').map(Number);
+    const [datePart, timePart] = date.split(' ');
+    const [day, month, year] = datePart.split('/').map(Number);
+    const [hours, minutes] = timePart.split(':').map(Number);
 
-  const startDateTimeParsed = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+    const startDateTimeParsed = new Date(Date.UTC(year, month - 1, day, hours, minutes));
 
 
-  return startDateTimeParsed;
+    return startDateTimeParsed;
 }
