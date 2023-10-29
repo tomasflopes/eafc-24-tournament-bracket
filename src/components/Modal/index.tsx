@@ -8,18 +8,16 @@ import { BASE_URL } from "@/service/api";
 interface ModalProps {
   game: Match;
   setHidden: React.Dispatch<React.SetStateAction<boolean>>;
-  hidden: boolean;
-  gameId: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden, gameId }) => {
+const Modal: React.FC<ModalProps> = ({ game, setHidden }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("#Submitting score...");
     console.log(score);
-    console.log(gameId);
+    console.log(game.id);
     try {
-      const response = await fetch(`${BASE_URL}/score/${gameId}`, {
+      const response = await fetch(`${BASE_URL}/score/${game.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +40,10 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden, gameId }) => {
     }
   };
 
-  const [score, setScore] = useState({ player1: 0, player2: 0 });
+  const [score, setScore] = useState({
+    player1: game.player1Score || 0,
+    player2: game.player2Score || 0,
+  });
 
   const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,58 +53,56 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden, gameId }) => {
     }));
   };
   return (
-    !hidden && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50">
-        <div className="relative w-1/2 h-1/2 bg-slate-800">
-          <button
-            className="absolute top-0 right-0 p-2 text-2xl text-white bg-red-500 rounded-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              setHidden(true);
-            }}
-          >
-            X
-          </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50">
+      <div className="relative w-1/2 h-1/2 bg-slate-800">
+        <button
+          className="absolute top-0 right-0 p-2 text-2xl text-white bg-red-500 rounded-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            setHidden(true);
+          }}
+        >
+          X
+        </button>
+        <div className="flex flex-col items-center justify-center w-full h-full">
           <div className="flex flex-col items-center justify-center w-full h-full">
-            <div className="flex flex-col items-center justify-center w-full h-full">
-              <h1 className="text-2xl font-bold">Insert the score</h1>
-              <p className="text-lg text-white"></p>
-              <p className="text-lg">
-                {formatDateDayMonthHourMin(game.startDate)}
-              </p>
-            </div>
-            <form
-              className="flex flex-col items-center justify-center w-full h-full"
-              onSubmit={handleSubmit}
-            >
-              <input
-                className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
-                type="number"
-                name="player1"
-                placeholder={"0"}
-                value={score.player1}
-                onChange={handleChangeScore}
-              />
-              <input
-                className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
-                type="number"
-                name="player2"
-                placeholder={"0"}
-                value={score.player2}
-                onChange={handleChangeScore}
-              />
-              <button
-                className="px-4 py-2 my-2 text-white bg-green-500 rounded-md"
-                type="submit"
-                onClick={() => setHidden(true)}
-              >
-                Submit
-              </button>
-            </form>
+            <h1 className="text-2xl font-bold">Insert the score</h1>
+            <p className="text-lg text-white"></p>
+            <p className="text-lg">
+              {formatDateDayMonthHourMin(game.startDate)}
+            </p>
           </div>
+          <form
+            className="flex flex-col items-center justify-center w-full h-full"
+            onSubmit={handleSubmit}
+          >
+            <input
+              className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
+              type="number"
+              name="player1"
+              placeholder={"0"}
+              value={score.player1}
+              onChange={handleChangeScore}
+            />
+            <input
+              className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
+              type="number"
+              name="player2"
+              placeholder={"0"}
+              value={score.player2}
+              onChange={handleChangeScore}
+            />
+            <button
+              className="px-4 py-2 my-2 text-white bg-green-500 rounded-md"
+              type="submit"
+              onClick={() => setHidden(true)}
+            >
+              Submit
+            </button>
+          </form>
         </div>
       </div>
-    )
+    </div>
   );
 };
 

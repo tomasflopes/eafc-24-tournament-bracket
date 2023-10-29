@@ -11,8 +11,14 @@ interface GameTableProps {
 }
 
 const GameTable: React.FC<GameTableProps> = ({ gameList: gameList }) => {
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState<boolean>(true);
+  const [selectedGame, setSelectedGame] = useState<Match | null>(null);
   console.log(gameList);
+
+  const handleModalOpen = (game: Match) => {
+    setSelectedGame(game);
+    setIsHidden(false);
+  };
 
   return (
     <section className="flex gap-x-8 px-8 h-full min-w-screen text-lg mt-14">
@@ -32,17 +38,11 @@ const GameTable: React.FC<GameTableProps> = ({ gameList: gameList }) => {
                     </td>
                     <td
                       className="w-1/4 px-2 py-2 text-xs md:text-base sm:px-6 sm:py-4"
-                      onClick={() => setIsHidden(false)}
+                      onClick={() => handleModalOpen(game)}
                     >
                       {(game.player1Score || 0) +
                         "-" +
                         ((game.player2Score && game.player2Score) || 0)}
-                      <Modal
-                        game={game}
-                        setHidden={setIsHidden}
-                        hidden={isHidden}
-                        gameId={game && game.id}
-                      />
                     </td>
                     <td className="w-1/4 px-2 py-2 text-xs md:text-base sm:px-6 sm:py-4">
                       {formatDateDayMonthHourMin(game.startDate)}
@@ -53,6 +53,9 @@ const GameTable: React.FC<GameTableProps> = ({ gameList: gameList }) => {
             ))}
         </tbody>
       </table>
+      {!isHidden && (
+        <Modal game={selectedGame as Match} setHidden={setIsHidden} />
+      )}
     </section>
   );
 };
