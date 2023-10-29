@@ -3,9 +3,11 @@ export const formatDateDayMonthHourMin = (date: number): string => {
   const hour = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const month = dateObj.toLocaleString("default", { month: "short" });
-  return `${dateObj.getDate()} ${month} ${hour ? hour : "00"}:${
-    minutes ? minutes : "00"
-  }`;
+
+  const formattedHour = hour < 10 ? `0${hour}` : hour;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${dateObj.getDate()} ${month} ${formattedHour}:${formattedMinutes}`;
 };
 
 export const parseDate = (date: string): Date => {
