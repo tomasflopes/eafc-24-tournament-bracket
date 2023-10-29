@@ -1,3 +1,5 @@
+"use client";
+
 import TournamentButton from "@/components/TournamentButton";
 
 const Admin: React.FC = () => {

@@ -2,52 +2,19 @@
 
 import { useState } from "react";
 import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
-import { Game } from "@/types/Game";
+import { Match } from "@/types/Match";
 
 interface ModalProps {
-  playerID: string;
-  game: Game;
+  game: Match;
   setHidden: React.Dispatch<React.SetStateAction<boolean>>;
   hidden: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ playerID, game, setHidden, hidden }) => {
-  const [localGame, setLocalGame] = useState(game);
-  const [scorePlayer1, setScorePlayer1] = useState<number | undefined>(
-    localGame.result ? localGame.result[0] : 0
-  );
-  const [scorePlayer2, setScorePlayer2] = useState<number | undefined>(
-    localGame.result ? localGame.result[1] : 0
-  );
-
-  const handleChangeScorePlayer1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setScorePlayer1(parseInt(e.target.value));
-  };
-
-  const handleChangeScorePlayer2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setScorePlayer2(parseInt(e.target.value));
-  };
+const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden }) => {
+  const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {};
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const newResult: [number, number] =
-      playerID === "player1"
-        ? [scorePlayer1 || 0, localGame.result ? localGame.result[1] || 0 : 0]
-        : [localGame.result ? localGame.result[0] || 0 : 0, scorePlayer2 || 0];
-
-    const updatedGame = { ...game, result: newResult };
-    setLocalGame(updatedGame);
-
-    console.log(updatedGame);
-
-    /*fetch(`/api/games/${game.id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        result: newResult,
-      }),
-    });*/
-
     setHidden(true);
   };
 
@@ -67,12 +34,10 @@ const Modal: React.FC<ModalProps> = ({ playerID, game, setHidden, hidden }) => {
           <div className="flex flex-col items-center justify-center w-full h-full">
             <div className="flex flex-col items-center justify-center w-full h-full">
               <h1 className="text-2xl font-bold">Insert the score</h1>
-              <p className="text-lg text-white">
-                {playerID === "player1"
-                  ? game.players?.[0].name
-                  : game.players?.[1].name}
+              <p className="text-lg text-white"></p>
+              <p className="text-lg">
+                {formatDateDayMonthHourMin(game.startDate)}
               </p>
-              <p className="text-lg">{formatDateDayMonthHourMin(game.date)}</p>
             </div>
             <form
               className="flex flex-col items-center justify-center w-full h-full"
@@ -82,12 +47,8 @@ const Modal: React.FC<ModalProps> = ({ playerID, game, setHidden, hidden }) => {
                 className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
                 type="number"
                 name="Score"
-                placeholder={game.result?.toString()}
-                onChange={
-                  "player1" === playerID
-                    ? handleChangeScorePlayer1
-                    : handleChangeScorePlayer2
-                }
+                placeholder={"0"}
+                onChange={handleChangeScore}
               />
               <button
                 className="px-4 py-2 my-2 text-white bg-green-500 rounded-md"
