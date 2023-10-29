@@ -12,9 +12,6 @@ const TableHeading: React.FC = () => {
           Score
         </th>
         <th scope="col" className="text-xs px-4 py-3">
-          Score
-        </th>
-        <th scope="col" className="text-xs px-4 py-3">
           Data
         </th>
       </tr>

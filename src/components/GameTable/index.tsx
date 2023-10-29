@@ -41,6 +41,7 @@ const GameTable: React.FC<GameTableProps> = ({ gameList: gameList }) => {
                         game={game}
                         setHidden={setIsHidden}
                         hidden={isHidden}
+                        gameId={game && game.id}
                       />
                     </td>
                     <td className="w-1/4 px-2 py-2 text-xs md:text-base sm:px-6 sm:py-4">

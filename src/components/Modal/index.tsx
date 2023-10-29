@@ -3,21 +3,54 @@
 import { useState } from "react";
 import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
 import { Match } from "@/types/Match";
+import { BASE_URL } from "@/service/api";
 
 interface ModalProps {
   game: Match;
   setHidden: React.Dispatch<React.SetStateAction<boolean>>;
   hidden: boolean;
+  gameId: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden }) => {
-  const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {};
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden, gameId }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setHidden(true);
+    console.log("#Submitting score...");
+    console.log(score);
+    console.log(gameId);
+    try {
+      const response = await fetch(`${BASE_URL}/score/${gameId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isFinished: true,
+          score: {
+            player1: score.player1,
+            player2: score.player2,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to submit score");
+      }
+      console.log("#Score submitted!");
+      setHidden(true);
+    } catch (error) {
+      console.error("Error submitting score:", error);
+    }
   };
 
+  const [score, setScore] = useState({ player1: 0, player2: 0 });
+
+  const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setScore((prevScore) => ({
+      ...prevScore,
+      [name]: parseInt(value),
+    }));
+  };
   return (
     !hidden && (
       <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50">
@@ -46,8 +79,17 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden, hidden }) => {
               <input
                 className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
                 type="number"
-                name="Score"
+                name="player1"
                 placeholder={"0"}
+                value={score.player1}
+                onChange={handleChangeScore}
+              />
+              <input
+                className="w-1/2 px-2 py-1 my-2 border-2 text-black border-gray-800 rounded-md"
+                type="number"
+                name="player2"
+                placeholder={"0"}
+                value={score.player2}
                 onChange={handleChangeScore}
               />
               <button
