@@ -55,6 +55,8 @@ export async function POST(
       include: { winner: true },
     });
 
+
+
     return NextResponse.json(updated, { status: 200 });
   } catch (e) {
     if (e instanceof ZodError)

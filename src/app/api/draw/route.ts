@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
             player1Id: players[playerId - 1]?.id, // *info
             player2Id: players[playerId - 2]?.id, // *info
             startDate: new Date(date), // create new date object to avoid reference
+            order: i + j,
           });
 
           playerId = playerId - 2; // 2 players per match

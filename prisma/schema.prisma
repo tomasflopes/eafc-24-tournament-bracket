@@ -21,6 +21,7 @@ model Match {
   player2Score Int?
   startDate    DateTime
   endDate      DateTime?
+  order        Int
 
   player1Id String? @db.ObjectId
   player2Id String? @db.ObjectId

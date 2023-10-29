@@ -2,14 +2,15 @@
 
 import { BASE_URL } from "@/service/api";
 import { Match } from "@prisma/client";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactCanvasConfetti from "react-canvas-confetti";
-import GameTable from "../GameTable";
 
-const TournamentButton: React.FC = ({}) => {
+interface TournamentButtonProps {
+  setGameList: React.SetStateAction<Match[][] | undefined>;
+}
+
+const TournamentButton: React.FC<TournamentButtonProps> = ({ setGameList }) => {
   const [isExploding, setIsExploding] = useState(false);
-  const [showGameTable, setShowGameTable] = useState(false);
-  const [draw, setDraw] = useState<Match[][]>();
   const [showButton, setShowButton] = useState(true);
 
   const tournamentGenerator = async () => {
@@ -29,8 +30,9 @@ const TournamentButton: React.FC = ({}) => {
         gameList.push(draw.slice(lastIndex, nOfGamesInRound + lastIndex));
         lastIndex += nOfGamesInRound;
       }
-      setDraw(gameList);
-      setShowGameTable(true);
+      if (typeof setGameList === "function") {
+        setGameList(gameList);
+      }
     } else alert("Tournament generation failed");
   };
 
@@ -44,7 +46,6 @@ const TournamentButton: React.FC = ({}) => {
           Generate Tournament
         </button>
       )}
-      {showGameTable && <GameTable gameList={draw} />}
       <ReactCanvasConfetti
         particleCount={500}
         gravity={1.2}

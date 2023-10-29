@@ -95,7 +95,6 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden }) => {
             <button
               className="px-4 py-2 my-2 text-white bg-green-500 rounded-md"
               type="submit"
-              onClick={() => setHidden(true)}
             >
               Submit
             </button>

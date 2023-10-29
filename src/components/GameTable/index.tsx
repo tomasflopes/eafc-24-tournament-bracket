@@ -16,6 +16,8 @@ const GameTable: React.FC<GameTableProps> = ({ gameList: gameList }) => {
   console.log(gameList);
 
   const handleModalOpen = (game: Match) => {
+    console.log("Opening modal");
+    console.log("game id", game.id);
     setSelectedGame(game);
     setIsHidden(false);
   };
