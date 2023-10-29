@@ -12,6 +12,7 @@
     "@prisma/client": "5.4.2",
     "next": "13.5.4",
     "react": "^18",
+    "react-canvas-confetti": "^1.4.0",
     "react-dom": "^18",
     "zod": "^3.22.4"
   },

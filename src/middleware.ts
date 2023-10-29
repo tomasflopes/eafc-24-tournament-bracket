@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
+
   const cookieValue = cookies().get(ADMIN_COOKIE) as {
     name: string;
     value: string;
@@ -13,9 +14,12 @@ export function middleware(request: NextRequest) {
     !cookieValue ||
     cookieValue.value !== process.env.NEXT_PUBLIC_ADMIN_USER
   )
-    return NextResponse.redirect(new URL("/login", request.url));
+  return NextResponse.redirect(new URL("/login", request.url)); 
+  
 }
 
 export const config = {
   matcher: "/admin/:path*",
 };
+
+
