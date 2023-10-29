@@ -10,9 +10,9 @@ const TournamentButton: React.FC = () => {
     const res = await fetch("/api/draw", {
       method: "POST",
     });
-    if (res.status === 200) alert("Tournament generated successfully");
-    else alert("Tournament generation failed");
-    setIsExploding(true);
+    if (res.status === 200) {
+      setIsExploding(true);
+    } else alert("Tournament generation failed");
   };
 
   return (
