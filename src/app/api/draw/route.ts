@@ -5,31 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError, array, number, object, string } from "zod";
 
 export async function GET(req: NextRequest) {
-  const matches = await prisma.match.findMany();
+  const matches = await prisma.match.findMany({
+    include: {
+      player1: true,
+      player2: true,
+    },
+  });
 
-  const matchesWithPlayers = await Promise.all(
-    matches.map(async (match) => {
-      if (!match.player1Id || !match.player2Id) return match;
-      const player1 = await prisma.player.findUnique({
-        where: {
-          id: match.player1Id,
-        },
-      });
-      const player2 = await prisma.player.findUnique({
-        where: {
-          id: match.player2Id,
-        },
-      });
-
-      return {
-        ...match,
-        player1,
-        player2,
-      };
-    })
-  );
-
-  return NextResponse.json(matchesWithPlayers, { status: 200 });
+  return NextResponse.json(matches, { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
