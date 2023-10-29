@@ -5,7 +5,7 @@ export interface Match {
   players?: [Player, Player];
   winner?: Player;
   player1Score?: number;
-  playerScore?: number;
+  player2Score?: number;
   startDate: Date;
   endDate?: Date;
 }

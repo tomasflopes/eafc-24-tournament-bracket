@@ -36,7 +36,9 @@ export default async function Home() {
                 >
                   <h2 className="text-center text-yellow-300 font-bold absolute mb-32">
                     {game.startDate &&
-                      formatDateDayMonthHourMin(new Date(game.startDate).getTime())}
+                      formatDateDayMonthHourMin(
+                        new Date(game.startDate).getTime()
+                      )}
                   </h2>
                   <GameBracket game={game} key={game.id} />
                 </div>
