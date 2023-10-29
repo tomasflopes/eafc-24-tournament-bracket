@@ -20,7 +20,7 @@ export async function POST(
         .optional(),
     });
 
-    const parsed = schema.parse(req.json());
+    const parsed = schema.parse(await req.json());
     if (parsed.isFinished && !parsed.score)
       return NextResponse.json(
         { error: "Score is required." },
