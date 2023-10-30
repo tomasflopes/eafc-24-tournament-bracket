@@ -35,6 +35,12 @@ export async function POST(
         { status: 404 }
       );
 
+    if (!match.player1Id || !match.player2Id)
+      return NextResponse.json(
+        { error: "Match is not ready." },
+        { status: 400 }
+      );
+
     // ties won't happen
     const winner =
       parsed.isFinished && parsed.score
