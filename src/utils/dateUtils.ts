@@ -2,7 +2,7 @@ export const formatDateDayMonthHourMin = (date: number): string => {
   const dateObj = new Date(date);
   const hour = dateObj.getHours();
   const minutes = dateObj.getMinutes();
-  const month = dateObj.toLocaleString("default", { month: "short" });
+  const month = dateObj.toLocaleString("pt", { month: "short" });
 
   const formattedHour = hour < 10 ? `0${hour}` : hour;
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;

@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
     include: {
       player1: true,
       player2: true,
+      winner: true,
     },
   });
 
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
     // helpers to calc rounds
     let round = 1;
     let half = totalPlayers / 2;
+    let order = players.length - 1;
 
     for (let r = 0; r < rounds.length; r++) {
       // start date of each round
@@ -74,9 +76,10 @@ export async function POST(req: NextRequest) {
             player1Id: players[playerId - 1]?.id, // *info
             player2Id: players[playerId - 2]?.id, // *info
             startDate: new Date(date), // create new date object to avoid reference
-            order: i + j,
+            order,
           });
 
+          order--;
           playerId = playerId - 2; // 2 players per match
           totalPlayers -= 2; // 2 players per match
         }

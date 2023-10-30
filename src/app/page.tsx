@@ -19,8 +19,6 @@ export default async function Home() {
     lastIndex += nOfGamesInRound;
   }
 
-  console.log(gameList);
-
   return (
     <main className="min-h-screen">
       <h1 className="text-3xl font-black absolute top-4 left-1/2 -translate-x-1/2">
@@ -57,11 +55,11 @@ export default async function Home() {
                     after:absolute after:-right-6 after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-[0.05px] after:bg-slate-200
                    after:border-slate-200 after:content-['']`}
                   >
-                    <h2 className="absolute top-0">
-                      {gameList[i][2 * j].winnerId?.name}
+                    <h2 className="absolute top-0 text-xl">
+                      {gameList[i][2 * j].winner?.name}
                     </h2>
                     <h2 className="absolute bottom-0">
-                      {gameList[i][2 * j + 1].winnerId?.name}
+                      {gameList[i][2 * j + 1].winner?.name}
                     </h2>
                   </div>
                 ))}

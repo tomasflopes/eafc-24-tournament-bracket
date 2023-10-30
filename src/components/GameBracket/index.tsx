@@ -1,8 +1,8 @@
-import { Game } from "@/types/Match";
+import { Match } from "@/types/Match";
 import { Key } from "react";
 
 interface GameBracketProps {
-  game: Game;
+  game: Match;
   key: Key;
 }
 
@@ -13,15 +13,15 @@ const GameBracket: React.FC<GameBracketProps> = ({ key, game }) => {
       key={key}
     >
       <h2 className="border-r-2 text-right pr-2 border-slate-200 border-b">
-        {game.result && game.result[0]}
+        {game.player1Score}
       </h2>
       <p className="border-b border-slate-200 pl-2 pr-6 w-full">
-        {game.players && game.players[0].name}
+        {game.player1 && game.player1.name}
       </p>
       <h2 className="border-r-2 text-right pr-2 border-slate-200">
-        {game.result && game.result[1]}
+        {game.player2Score}
       </h2>
-      <p className="pl-2 pr-6">{game.players && game.players[1].name}</p>
+      <p className="pl-2 pr-6">{game.player2 && game.player2.name}</p>
     </article>
   );
 };

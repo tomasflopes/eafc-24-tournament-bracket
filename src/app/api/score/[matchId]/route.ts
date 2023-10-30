@@ -28,7 +28,7 @@ export async function POST(
         { status: 400 }
       );
 
-    const match = await prisma.match.findFirst({ where: { id: matchId } });
+    const match = await prisma.match.findUnique({ where: { id: matchId } });
     if (!match)
       return NextResponse.json(
         { error: "Match with given id does not exist." },
@@ -55,7 +55,11 @@ export async function POST(
       include: { winner: true },
     });
 
-
+    const key = updated.order % 2 === 0 ? "player2Id" : "player1Id";
+    await prisma.match.updateMany({
+      where: { order: updated.order / 2 },
+      data: { [key]: winner },
+    });
 
     return NextResponse.json(updated, { status: 200 });
   } catch (e) {

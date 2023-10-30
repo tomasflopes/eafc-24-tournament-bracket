@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
-import { Match } from "@/types/Match";
 import { BASE_URL } from "@/service/api";
+import { Match } from "@/types/Match";
+import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
+import { useState } from "react";
 
 interface ModalProps {
   game: Match;
@@ -13,9 +13,6 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ game, setHidden }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("#Submitting score...");
-    console.log(score);
-    console.log(game.id);
     try {
       const response = await fetch(`${BASE_URL}/score/${game.id}`, {
         method: "POST",
@@ -33,8 +30,8 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden }) => {
       if (!response.ok) {
         throw new Error("Failed to submit score");
       }
-      console.log("#Score submitted!");
       setHidden(true);
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting score:", error);
     }
@@ -56,7 +53,7 @@ const Modal: React.FC<ModalProps> = ({ game, setHidden }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50">
       <div className="relative w-1/2 h-1/2 bg-slate-800">
         <button
-          className="absolute top-0 right-0 p-2 text-2xl text-white bg-red-500 rounded-full"
+          className="absolute top-4 right-4 p-2 text-2xl text-white bg-red-500 rounded-full h-12 w-12"
           onClick={(e) => {
             e.stopPropagation();
             setHidden(true);
