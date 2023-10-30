@@ -1,10 +1,24 @@
+"use client";
+
 import GameBracket from "@/components/GameBracket";
+import { BASE_URL } from "@/service/api";
 import { Match } from "@/types/Match";
 import { formatDateDayMonthHourMin } from "@/utils/dateUtils";
-import { getPlayers } from "./lib/getPlayers";
+import { useEffect, useState } from "react";
 
-export default async function Home() {
-  const draw = (await getPlayers()) as Match[];
+export default function Home() {
+  const [draw, setDraw] = useState<Match[]>([]);
+
+  async function getDraw() {
+    const res = await fetch(BASE_URL + "/draw");
+    const data = await res.json();
+
+    setDraw(data);
+  }
+
+  useEffect(() => {
+    getDraw();
+  }, []);
 
   const gameList: Match[][] = [];
   let lastIndex = 0;

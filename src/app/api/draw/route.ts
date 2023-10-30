@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError, array, number, object, string } from "zod";
 
 export async function GET(req: NextRequest) {
-  const matches = getPlayers();
+  const matches = await getPlayers();
 
   return NextResponse.json(matches, { status: 200 });
 }

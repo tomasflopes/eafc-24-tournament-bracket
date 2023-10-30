@@ -1,1 +1,1 @@
-export const BASE_URL = "https://eafc24.nei-isep.org/api";
+export const BASE_URL = "http://localhost:3000/api";

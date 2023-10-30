@@ -1,9 +1,23 @@
+"use client";
+
 import DrawTournamentButton from "@/components/DrawTournamentButton";
 import GameTable from "@/components/GameTable";
-import { getPlayers } from "../lib/getPlayers";
+import { BASE_URL } from "@/service/api";
+import { useEffect, useState } from "react";
 
-const Admin: React.FC = async () => {
-  const data = (await getPlayers()) as any;
+const Admin: React.FC = () => {
+  const [data, setData] = useState([]);
+
+  async function getData() {
+    const res = await fetch(BASE_URL + "/draw");
+    const data = await res.json();
+
+    setData(data);
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <section className="h-screen w-screen flex flex-col justify-center items-center relative">
