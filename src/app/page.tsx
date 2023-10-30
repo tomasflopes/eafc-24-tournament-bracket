@@ -16,8 +16,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="flex gap-x-8 px-8 h-full min-w-screen text-lg mt-14">
+    <main className="min-w-screen min-h-screen">
+      <div className="flex gap-x-8 px-8 h-full min-w-screen text-lg my-14">
         {gameList &&
           gameList.map((gameRound, i) => (
             <>
@@ -27,11 +27,15 @@ export default async function Home() {
                     className="w-full flex flex-col justify-center"
                     key={game.id}
                   >
-                    <h2 className="text-center text-yellow-300 font-bold absolute mb-32">
+                    <h2 className="text-center text-yellow-300 font-bold absolute mb-32 w-32">
                       {game.startDate &&
                         formatDateDayMonthHourMin(game.startDate)}
                     </h2>
-                    <GameBracket game={game} key={game.id} />
+                    <GameBracket
+                      game={game}
+                      key={game.id}
+                      winnerId={game.winnerId}
+                    />
                   </div>
                 ))}
               </section>
@@ -40,15 +44,14 @@ export default async function Home() {
                   <div
                     key={game.id}
                     style={{ height: `${100 / gameList[i].length}%` }}
-                    className={`w-40
-                    border-t border-b relative border-r border-slate-200 after:border-b
+                    className={`w-40 border-t border-b relative border-r border-slate-200 after:border-b
                     after:absolute after:-right-6 after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-[0.05px] after:bg-slate-200
                    after:border-slate-200 after:content-['']`}
                   >
-                    <h2 className="absolute top-0 text-xl">
+                    <h2 className="absolute top-0 text-xl text-gray-400 font-bold">
                       {gameList[i][2 * j].winner?.name}
                     </h2>
-                    <h2 className="absolute bottom-0">
+                    <h2 className="absolute bottom-0 text-slate-400 font-bold">
                       {gameList[i][2 * j + 1].winner?.name}
                     </h2>
                   </div>
