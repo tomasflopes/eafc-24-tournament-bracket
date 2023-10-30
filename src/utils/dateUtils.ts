@@ -1,4 +1,4 @@
-export const formatDateDayMonthHourMin = (date: number): string => {
+export const formatDateDayMonthHourMin = (date: Date): string => {
   const dateObj = new Date(date);
   const hour = dateObj.getHours();
   const minutes = dateObj.getMinutes();

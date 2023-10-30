@@ -1,3 +1,4 @@
+import { getPlayers } from "@/app/lib/getPlayers";
 import prisma from "@/app/lib/prisma";
 import { parseDate } from "@/utils/dateUtils";
 import { Player } from "@prisma/client";
@@ -5,13 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError, array, number, object, string } from "zod";
 
 export async function GET(req: NextRequest) {
-  const matches = await prisma.match.findMany({
-    include: {
-      player1: true,
-      player2: true,
-      winner: true,
-    },
-  });
+  const matches = getPlayers();
 
   return NextResponse.json(matches, { status: 200 });
 }

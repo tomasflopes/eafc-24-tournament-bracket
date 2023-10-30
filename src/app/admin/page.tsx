@@ -1,12 +1,9 @@
 import DrawTournamentButton from "@/components/DrawTournamentButton";
 import GameTable from "@/components/GameTable";
-import { BASE_URL } from "@/service/api";
+import { getPlayers } from "../lib/getPlayers";
 
 const Admin: React.FC = async () => {
-  const res = await fetch(`${BASE_URL}/draw`, {
-    cache: "no-cache",
-  });
-  const data = await res.json();
+  const data = (await getPlayers()) as any;
 
   return (
     <section className="h-screen w-screen flex flex-col justify-center items-center relative">

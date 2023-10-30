@@ -4,8 +4,8 @@ export interface Match {
   isFinished: boolean;
   player1Score: number | null;
   player2Score: number | null;
-  startDate: number;
-  endDate: string | null;
+  startDate: Date;
+  endDate: Date | null;
   player1Id?: string;
   player2Id?: string;
   winnerId: string | null;
