@@ -4,7 +4,7 @@ import { Key } from "react";
 interface GameBracketProps {
   game: Match;
   key: Key;
-  winnerId?: string;
+  winnerId: string | null;
 }
 
 const GameBracket: React.FC<GameBracketProps> = ({ key, game, winnerId }) => {
