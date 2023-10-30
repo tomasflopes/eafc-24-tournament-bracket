@@ -17,10 +17,6 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen">
-      <h1 className="text-3xl font-black absolute top-4 left-1/2 -translate-x-1/2">
-        NEI-ISEP: EA FC 24 Drawer
-      </h1>
-
       <div className="flex gap-x-8 px-8 h-full min-w-screen text-lg mt-14">
         {gameList &&
           gameList.map((gameRound, i) => (
